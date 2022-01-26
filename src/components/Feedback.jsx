@@ -17,39 +17,34 @@ class Feedback extends Component {
     this.setState((state) => ({ [k]: state[k] + 1 }));
   };
 
-  countTotalFeedback() {
-    this.totalFeedback = this.state.good + this.state.neutral + this.state.bad;
-    return this.totalFeedback;
+  countTotalFeedback = () => {
+    return this.state.good + this.state.neutral + this.state.bad;
+   
   }
-
-  countPositiveFeedbackPercentage() {
-    this.positiveFeedbackPercentage =
-      this.totalFeedback === 0
-        ? 0
-        : Math.round((this.state.good / this.totalFeedback) * 100);
-    return this.positiveFeedbackPercentage;
+countPositiveFeedbackPercentage = () => {
+    return  Math.round((this.state.good / this.countTotalFeedback()) * 100);
   }
 
   render() {
-    const { handleIncrement } = this;
-
-    this.countTotalFeedback();
-    this.countPositiveFeedbackPercentage();
+   
+    const  total = this.countTotalFeedback();
+    const  positive = this.countPositiveFeedbackPercentage();
+    
     return (
       <Container>
         <Title>Please leave feedback</Title>
 
-        <FeedbackOptions handleIncrement={handleIncrement} />
+        <FeedbackOptions handleIncrement={this.handleIncrement} />
 
         <StatisticsTitle>Statistics</StatisticsTitle>
 
-        {this.totalFeedback > 0 ? (
+        {total > 0 ? (
           <Statistics
             good={this.state.good}
             neutral={this.state.neutral}
             bad={this.state.bad}
-            total={this.totalFeedback}
-            positivePercentage={this.positiveFeedbackPercentage}
+            total={total}
+            positivePercentage={positive}
           />
         ) : (
           <NotificationMessage />
